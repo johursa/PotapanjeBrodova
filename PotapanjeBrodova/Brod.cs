@@ -23,18 +23,18 @@ namespace PotapanjeBrodova
         {
             get { return Polja.Count(); }
         }
-
-        public RezultatGađanja Gađaj(Polje p)
-        {
-            if (!Polja.Contains(p))
+  
+         public RezultatGađanja Gađaj(Polje p)
+         {
+             if (!Polja.Contains(p))
                 return RezultatGađanja.Promašaj;
-            pogođenaPolja.Add(p);
-            if (pogođenaPolja.Count == Polja.Count())
-                return RezultatGađanja.Potonuće;
-            return RezultatGađanja.Pogodak;
-        }
-
-        public readonly IEnumerable<Polje> Polja;
-        private HashSet<Polje> pogođenaPolja = new HashSet<Polje>();
-    }
+             pogođenaPolja.Add(p);
+             if (pogođenaPolja.Count == Polja.Count())
+                 return RezultatGađanja.Potonuće;
+             return RezultatGađanja.Pogodak;
+         }
+ 
+          public readonly IEnumerable<Polje> Polja;
+         private HashSet<Polje> pogođenaPolja = new HashSet<Polje>();
 }
+  }
