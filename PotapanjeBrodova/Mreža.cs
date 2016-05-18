@@ -109,7 +109,7 @@ namespace PotapanjeBrodova
         private IEnumerable<Polje> DajPoljaLijevo(int redak, int stupac)
         {
             List<Polje> slobodna = new List<Polje>();
-            while (--stupac<Stupaca && polja[redak, stupac] != null)
+            while (--stupac>=0 && polja[redak, stupac] != null)
                 slobodna.Add(polja[redak, stupac]);
             return slobodna;
 
