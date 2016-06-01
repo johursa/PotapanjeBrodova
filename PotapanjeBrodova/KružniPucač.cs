@@ -32,8 +32,28 @@ namespace PotapanjeBrodova
             return najdulji.ElementAt(indeks).First();
         }
 
-        Polje prvoPogođeno;
+        public void EvidentirajRezultat(RezultatGađanja rezultat)
+        {
+            if (rezultat == RezultatGađanja.Promašaj)
+                return;
+           PogođenaPolja.Add(zadnjeGađano);
+           PogođenaPolja.Sort((a, b) => a.Redak - b.Redak + a.Stupac - b.Stupac);
+        }
+
+      
+
+        public IEnumerable<Polje> PogođenaPolja
+        {
+            get
+            {
+                return PogođenaPolja;
+            }
+        }
+
+        List<Polje> pogođenaPolja = new List<Polje>();
+        Polje zadnjeGađano;
         Mreža mreža;
         Random slučajni = new Random();
+
     }
 }

@@ -17,12 +17,19 @@ namespace PotapanjeBrodova
         {
             Orijentacija o = DajOrijentaciju();
             var liste = DajPoljaUNastavku(o);
-            if (liste.Count() == 1)
-                return liste.First().First();
-            int indeks = slučajni.Next(liste.Count());
-            return liste.ElementAt(indeks).First();
+            liste.Sort((lista1, lista2) => lista2.Count() - lista1.Count());
+            var grupe = liste.GroupBy(lista => lista.Count());
+                        
+            var najdulji = grupe.First();
+            int indeks = najdulji.Count() == 1 ? 0 : slučajni.Next(najdulji.Count());
+            zadnjeGađano = najdulji.ElementAt(indeks).First();
+            mreža.EliminirajPolje(zadnjeGađano);
+            
+              return zadnjeGađano;
 
         }
+        private Polje zadnjeGađano;
+
         private Orijentacija DajOrijentaciju()
         {
             if (pogođenaPolja[0].Redak == pogođenaPolja[1].Redak)
@@ -30,7 +37,7 @@ namespace PotapanjeBrodova
             return Orijentacija.Vertikalno;
 
         }
-        private IEnumerable<IEnumerable<Polje>> DajPoljaUNastavku(Orijentacija orijentacija)
+        private List<IEnumerable<Polje>> DajPoljaUNastavku(Orijentacija orijentacija)
         {
             switch (orijentacija)
             {
@@ -43,7 +50,7 @@ namespace PotapanjeBrodova
             }
 
         }
-        private IEnumerable<IEnumerable<Polje>> DajPoljaUNastavku(Smjer smjer1, Smjer smjer2)
+        private List<IEnumerable<Polje>> DajPoljaUNastavku(Smjer smjer1, Smjer smjer2)
         {
             List<IEnumerable<Polje>> liste = new List<IEnumerable<Polje>>();
             int redak0 = pogođenaPolja[0].Redak;
@@ -60,9 +67,23 @@ namespace PotapanjeBrodova
             return liste;
         }
 
+        public void EvidentirajRezultat(RezultatGađanja rezultat)
+        {
+            if (rezultat == RezultatGađanja.Promašaj)
+                return;
+
+        }
 
         List<Polje> pogođenaPolja;
         Mreža mreža;
         Random slučajni = new Random();
+
+        public IEnumerable<Polje> PogođenaPolja
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

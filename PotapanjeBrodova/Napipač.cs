@@ -71,9 +71,22 @@ using System.Text;
              }
              return kandidati;
          }
- 
-         private Mreža mreža;
+
+        public void EvidentirajRezultat(RezultatGađanja rezultat)
+        {
+           
+        }
+
+        private Mreža mreža;
          private int duljinaBroda;
          private Random slučajni = new Random();
-     }
+
+        public IEnumerable<Polje> PogođenaPolja
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+    }
  }
