@@ -5,38 +5,55 @@ using System.Text;
 
 namespace PotapanjeBrodova
 {
-   public  class SustavniPucač: IPucaČ
+    public class SustavniPucač : IPucač
     {
-        public SustavniPucač(IEnumerable<Polje>pogođena,Mreža mreža)
+        public SustavniPucač(IEnumerable<Polje> pogođena, Mreža mreža)
         {
-            pogođenaPolja = new List<Polje>(pogođena);
-            pogođenaPolja.Sort((a,b)=>a.Redak-b.Redak +a.Stupac-b.Stupac);
+            pogođenaPolja.AddRange(pogođena);
+            pogođenaPolja.Sort((a, b) => a.Redak - b.Redak + a.Stupac - b.Stupac);
             this.mreža = mreža;
         }
+
+        #region Implementacija sučelja IPucač
+
         public Polje UputiPucanj()
         {
             Orijentacija o = DajOrijentaciju();
             var liste = DajPoljaUNastavku(o);
+            // sortiraj dobivene liste po duljinama te ih grupiraj
             liste.Sort((lista1, lista2) => lista2.Count() - lista1.Count());
             var grupe = liste.GroupBy(lista => lista.Count());
-                        
+            // uzmi najdulju listu, a ako ih ima više onda slučajni odabir
             var najdulji = grupe.First();
             int indeks = najdulji.Count() == 1 ? 0 : slučajni.Next(najdulji.Count());
             zadnjeGađano = najdulji.ElementAt(indeks).First();
             mreža.EliminirajPolje(zadnjeGađano);
-            
-              return zadnjeGađano;
 
+            return zadnjeGađano;
         }
-        private Polje zadnjeGađano;
+
+        public void EvidentirajRezultat(RezultatGađanja rezultat)
+        {
+            if (rezultat == RezultatGađanja.Promašaj)
+                return;
+            pogođenaPolja.Add(zadnjeGađano);
+            pogođenaPolja.Sort((a, b) => a.Redak - b.Redak + a.Stupac - b.Stupac);
+        }
+
+        public IEnumerable<Polje> PogođenaPolja
+        {
+            get { return pogođenaPolja; }
+        }
+
+        #endregion Implementacija sučelja IPucač
 
         private Orijentacija DajOrijentaciju()
         {
             if (pogođenaPolja[0].Redak == pogođenaPolja[1].Redak)
                 return Orijentacija.Horizontalno;
             return Orijentacija.Vertikalno;
-
         }
+
         private List<IEnumerable<Polje>> DajPoljaUNastavku(Orijentacija orijentacija)
         {
             switch (orijentacija)
@@ -48,14 +65,14 @@ namespace PotapanjeBrodova
                 default:
                     throw new NotImplementedException();
             }
-
         }
+
         private List<IEnumerable<Polje>> DajPoljaUNastavku(Smjer smjer1, Smjer smjer2)
         {
             List<IEnumerable<Polje>> liste = new List<IEnumerable<Polje>>();
             int redak0 = pogođenaPolja[0].Redak;
             int stupac0 = pogođenaPolja[0].Stupac;
-           var l1= mreža.DajPoljaUZadanomSmjeru(redak0, stupac0, smjer1);
+            var l1 = mreža.DajPoljaUZadanomSmjeru(redak0, stupac0, smjer1);
             if (l1.Count() > 0)
                 liste.Add(l1);
             int n = pogođenaPolja.Count() - 1;
@@ -67,23 +84,10 @@ namespace PotapanjeBrodova
             return liste;
         }
 
-        public void EvidentirajRezultat(RezultatGađanja rezultat)
-        {
-            if (rezultat == RezultatGađanja.Promašaj)
-                return;
-
-        }
-
-        List<Polje> pogođenaPolja;
+        List<Polje> pogođenaPolja = new List<Polje>();
+        private Polje zadnjeGađano;
         Mreža mreža;
         Random slučajni = new Random();
 
-        public IEnumerable<Polje> PogođenaPolja
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-        }
     }
 }

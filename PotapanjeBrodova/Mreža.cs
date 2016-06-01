@@ -8,6 +8,7 @@ namespace PotapanjeBrodova
         Horizontalno,
         Vertikalno
     }
+
     public enum Smjer
     {
         Gore,
@@ -15,6 +16,7 @@ namespace PotapanjeBrodova
         Dolje,
         Lijevo
     }
+
     public class Mreža
     {
         public Mreža(int redaka, int stupaca)
@@ -71,7 +73,8 @@ namespace PotapanjeBrodova
             }
             return poljaZaBrod;
         }
-        public IEnumerable<Polje> DajPoljaUZadanomSmjeru(int redak,int stupac, Smjer smjer)
+
+        public IEnumerable<Polje> DajPoljaUZadanomSmjeru(int redak, int stupac, Smjer smjer)
         {
             switch (smjer)
             {
@@ -79,17 +82,16 @@ namespace PotapanjeBrodova
                     return DajPoljaIznad(redak, stupac);
                 case Smjer.Desno:
                     return DajPoljaDesno(redak, stupac);
-                case Smjer.Lijevo:
-                    return DajPoljaLijevo(redak, stupac);
                 case Smjer.Dolje:
                     return DajPoljaIspod(redak, stupac);
+                case Smjer.Lijevo:
+                    return DajPoljaLijevo(redak, stupac);
                 default:
-                   Debug.Assert(false, string.Format("Nije podržan smjer {0}"), smjer.ToString());
-                     return null;
-
+                    Debug.Assert(false, string.Format("Nije podržan smjer: {0}", smjer.ToString()));
+                    return null;
             }
-
         }
+
         private IEnumerable<Polje> DajPoljaIznad(int redak, int stupac)
         {
             List<Polje> slobodna = new List<Polje>();
@@ -101,7 +103,15 @@ namespace PotapanjeBrodova
         private IEnumerable<Polje> DajPoljaDesno(int redak, int stupac)
         {
             List<Polje> slobodna = new List<Polje>();
-            while (++stupac <Stupaca && polja[redak, stupac] != null)
+            while (++stupac < Stupaca && polja[redak, stupac] != null)
+                slobodna.Add(polja[redak, stupac]);
+            return slobodna;
+        }
+
+        private IEnumerable<Polje> DajPoljaIspod(int redak, int stupac)
+        {
+            List<Polje> slobodna = new List<Polje>();
+            while (++redak < Redaka && polja[redak, stupac] != null)
                 slobodna.Add(polja[redak, stupac]);
             return slobodna;
         }
@@ -109,16 +119,7 @@ namespace PotapanjeBrodova
         private IEnumerable<Polje> DajPoljaLijevo(int redak, int stupac)
         {
             List<Polje> slobodna = new List<Polje>();
-            while (--stupac>=0 && polja[redak, stupac] != null)
-                slobodna.Add(polja[redak, stupac]);
-            return slobodna;
-
-        }
-
-        private IEnumerable<Polje> DajPoljaIspod(int redak, int stupac)
-        {
-            List<Polje> slobodna = new List<Polje>();
-            while (++redak <Redaka && polja[redak, stupac] != null)
+            while (--stupac >= 0 && polja[redak, stupac] != null)
                 slobodna.Add(polja[redak, stupac]);
             return slobodna;
         }
